@@ -17,9 +17,9 @@ main = do
 game :: Game -> IO ()
 game (d, ph, dh) = do
   if busted ph
-    then putStrLn "You busted!"
+    then putStrLn $ "You busted! with: " ++ id (show (sum $ map cardValue ph))
       else if busted dh
-        then putStrLn "Dealer busted!"
+        then putStrLn $ "Dealer busted! with: " ++ id (show (sum $ map cardValue dh))
         else do
           putStrLn $ "Dealer hand: " ++ id (show (sum $ map cardValue dh))
           putStrLn $ "Your hand: " ++ id (show (sum $ map cardValue ph))
@@ -63,7 +63,7 @@ justDealer (d, dh, ph) = if (sum $ map cardValue dh) < 17
 
 declareWinner :: Game -> IO ()
 declareWinner (d, dh, ph) = if (sum $ map cardValue dh) == (sum $ map cardValue ph)
-  then putStrLn "Its a tie!"
+  then putStrLn $ "Its a tie! Dealers hand: " ++ id (show (sum $ map cardValue dh)) ++ " Your hand: " ++ id (show (sum $ map cardValue ph))
   else if (sum $ map cardValue dh) > (sum $ map cardValue ph)
-    then putStrLn "Dealer wins!"
-    else putStrLn "You win!"
+    then putStrLn $ "Dealer wins! Dealers hand: " ++ id (show (sum $ map cardValue dh)) ++ " Your hand: " ++ id (show (sum $ map cardValue ph))
+    else putStrLn $ "You win! Dealers hand: " ++ id (show (sum $ map cardValue dh)) ++ " Your hand: " ++ id (show (sum $ map cardValue ph))
