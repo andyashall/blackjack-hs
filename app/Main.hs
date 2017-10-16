@@ -11,8 +11,7 @@ main :: IO ()
 main = do
   deck <- shuffleM newDeck
   let (d, dh, ph) = addCard (deck, [], [])
-  let (d1, dh1, ph1) = addCard (d, ph, dh)
-  game (d1, dh1, ph1)
+  game (addCard (d, ph, dh))
 
 game :: Game -> IO ()
 game (d, ph, dh) = do
@@ -25,9 +24,10 @@ game (d, ph, dh) = do
           putStrLn $ "Your hand: " ++ id (show (sum $ map cardValue ph))
           action <- getLine
           case action of
-            "hit" -> do
-              let (d1, dh1, ph1) = addCard (d1, ph1, dh1)
-              game (playDealer (d, dh, ph))
+            "hit" -> do 
+            -- game (addCard (playDealer (d, dh, ph)))
+              let (d1, dh1, ph1) = playDealer (d, dh, ph)
+              game (addCard (d1, ph1, dh1))
             "stay" -> do
               let (d1, dh1, ph1) = justDealer (d, dh, ph)
               if busted dh1
@@ -58,9 +58,7 @@ playDealer (d, dh, ph) = if (sum $ map cardValue dh) < 17
 
 justDealer :: Game -> Game
 justDealer (d, dh, ph) = if (sum $ map cardValue dh) < 17
-  then do
-    let (d1, dh1, ph1) = addCard (d, dh, ph)
-    justDealer (d1, dh1, ph1)
+  then justDealer (addCard (d, dh, ph))
   else (d, dh, ph)
 
 declareWinner :: Game -> IO ()
