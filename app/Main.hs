@@ -30,7 +30,9 @@ game (d, ph, dh) = do
               game (addCard (d1, ph1, dh1))
             "stay" -> do
               let (d1, dh1, ph1) = justDealer (d, dh, ph)
-              declareWinner (d1, dh1, ph1)
+              if busted dh1
+                then putStrLn $ "Dealer busted! with: " ++ id (show (sum $ map cardValue dh1))
+                else declareWinner (d1, dh1, ph1)
             _ -> game (d, ph, dh)
 
 newDeck :: Deck
