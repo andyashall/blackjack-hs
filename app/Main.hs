@@ -10,11 +10,11 @@ type Game = (Deck, Deck, Deck)
 main :: IO ()
 main = do
   deck <- shuffleM newDeck
-  let (d, dh, ph) = addCard (deck, [], [])
-  game (addCard (d, ph, dh))
+  let (d, ph, dh) = addCard (deck, [], [])
+  game (addCard (d, dh, ph))
 
 game :: Game -> IO ()
-game (d, ph, dh) = do
+game (d, dh, ph) = do
   if busted ph
     then putStrLn $ "You busted! with: " ++ id (show (sum $ map cardValue ph))
       else if busted dh
@@ -25,14 +25,14 @@ game (d, ph, dh) = do
           action <- getLine
           case action of
             "hit" -> do 
-              let (d1, dh1, ph1) = playDealer (d, dh, ph)
-              game (addCard (d1, ph1, dh1))
+              let (d1, ph1, dh1) = addCard (d, ph, dh)
+              game (playDealer (d1, dh1, ph1))
             "stay" -> do
               let (d1, dh1, ph1) = justDealer (d, dh, ph)
               if busted dh1
                 then putStrLn $ "Dealer busted! with: " ++ id (show (sum $ map cardValue dh1))
                 else declareWinner (d1, dh1, ph1)
-            _ -> game (d, ph, dh)
+            _ -> game (d, dh, ph)
 
 newDeck :: Deck
 newDeck = concat $ replicate 4 $ map Numeric [2..10] ++ [Ace, King, Queen, Jack]
