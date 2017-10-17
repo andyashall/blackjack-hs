@@ -25,7 +25,6 @@ game (d, ph, dh) = do
           action <- getLine
           case action of
             "hit" -> do 
-            -- game (addCard (playDealer (d, dh, ph)))
               let (d1, dh1, ph1) = playDealer (d, dh, ph)
               game (addCard (d1, ph1, dh1))
             "stay" -> do
